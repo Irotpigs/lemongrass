@@ -127,7 +127,7 @@ namespace Lemongrass
 
       INIParser parser = new INIParser();
       parser.OpenConfig("GameInstance.ini");
-      bool useGameInstance = parser.ReadValue("GameInstance", "UseGameInstance", false);
+      bool useGameInstance = parser.ReadValue("GameInstance", "UseGameInstance", true);
       parser.Close();
 
       if (!useGameInstance) return;

@@ -79,7 +79,7 @@ namespace Lemongrass
       if (filePaths.Count <= 0)
       {
         // there was no config file path yet, let the user know
-        rootVisualElement.Add(new Label("Hello"));// $"No config files found!\nAdd your config files to {configFilePath}.\nThey must have the .ini extension"));
+        rootVisualElement.Add(new Label($"No config files found!\nAdd your config files to {configFilePath}.\nThey must have the .ini extension"));
         return;
       }
 

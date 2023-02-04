@@ -71,7 +71,8 @@ public class INIParser
     // *** Open an ini by filename in path relative to application config path ***
     public void OpenConfig(string filename)
     {
-       Open(applicationConfigPath + filename);
+        if (!Directory.Exists(applicationConfigPath)) Directory.CreateDirectory(applicationConfigPath);
+        Open(applicationConfigPath + filename);
     }
 
     // *** Open ini file by path ***
@@ -677,7 +678,7 @@ public class INIParser
     // *** Setters for various types ***
     public void WriteValue(string SectionName, string Key, bool Value)
     {
-        WriteValue(SectionName, Key, (Value) ? ("1") : ("0"));
+        WriteValue(SectionName, Key, (Value) ? ("true") : ("false"));
     }
 
     public void WriteValue(string SectionName, string Key, int Value)

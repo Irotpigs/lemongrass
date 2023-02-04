@@ -1,7 +1,7 @@
 {
     "name": "danielonstott.lemongrass.editor",
     "references": [
-        "TMPro"
+        "danielonstott.lemongrass"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

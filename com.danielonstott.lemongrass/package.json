@@ -1,0 +1,25 @@
+{
+  "name": "com.danielonstott.lemongrass",
+  "version": "1.0.0",
+  "displayName": "Lemongrass",
+  "description": "All the tools one needs to create the next Cubic Currency.",
+  "unity": "2021.3",
+  "unityRelease": "10f1",
+  "documentationUrl": "https://danielons.com/",
+  "changelogUrl": "https://danielons.com/",
+  "licensesUrl": "https://danielons.com/",
+  "dependencies": {
+    "com.unity.textmeshpro": "3.0.6",
+    "com.unity.inputsystem": "1.4.4"
+ },
+ "keywords": [
+    "lemon",
+    "grass",
+    "utility"
+  ],
+  "author": {
+    "name": "Daniel Onstott",
+    "email": "daniel.onstott@gmail.com",
+    "url": "https://www.danielons.com"
+  }
+}

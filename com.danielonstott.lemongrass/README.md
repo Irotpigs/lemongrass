@@ -1,0 +1,1 @@
+Make requests for package changes, additions, and updates in the #resources channel in Discord.

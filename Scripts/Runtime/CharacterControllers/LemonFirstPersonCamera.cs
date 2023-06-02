@@ -40,8 +40,8 @@ namespace Lemongrass
     private void OnLook(InputValue value)
     {
       //Get Mouse Input
-      float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
-      float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
+      float mouseX = value.Get<Vector2>().x * mouseSensitivity;
+      float mouseY = value.Get<Vector2>().y * mouseSensitivity;
 
       xRotation -= mouseY;
       xRotation = Mathf.Clamp(xRotation, -90f, 90f);

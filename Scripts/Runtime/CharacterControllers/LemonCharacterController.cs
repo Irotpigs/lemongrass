@@ -5,10 +5,8 @@
 // Description - Uses the Unity InputSystem to convert action bindings into 
 //  simple character movement. This class would have to be expanded to fit a 
 //  given project as there isn't a one size fits all situation
-//
-//  TODO: This uses a rigid body and I'm not happy. Very floaty. Need to revise
-//  This when I actually need an FPS controller
 //---------------------------------------------------------------------------//
+using System.Threading;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -34,6 +32,7 @@ namespace Lemongrass
     [SerializeField] private float accelerationMultiplier = 8f;
     [SerializeField] private float jumpForce = 6f;
     [SerializeField] private float airMultiplier = 1.2f;
+    [SerializeField] private float gravityMultiplier = 1f;
     [SerializeField] private float groundDrag = 10f;
 
     private Rigidbody playerRb;
@@ -50,6 +49,7 @@ namespace Lemongrass
     {
       playerRb = GetComponent<Rigidbody>();
       playerRb.freezeRotation = true;
+      playerRb.useGravity = false;
     }
 
     private void Update()
@@ -65,6 +65,7 @@ namespace Lemongrass
     private void FixedUpdate()
     {
       MovePlayer();
+      Fall();
     }
 
     private void MovePlayer()
@@ -83,6 +84,13 @@ namespace Lemongrass
         Vector3 limitedVel = flatVel.normalized * moveSpeed;
         playerRb.velocity = new Vector3(limitedVel.x, playerRb.velocity.y, limitedVel.z);
       }
+    }
+
+    private void Fall()
+    {
+      // move the player as though it had gravity
+      float accelerationDueToGravity = playerRb.velocity.y + Physics.gravity.y * gravityMultiplier * Time.fixedDeltaTime;
+      playerRb.velocity = new Vector3(playerRb.velocity.x, accelerationDueToGravity, playerRb.velocity.z);
     }
 
     ////////////////////////////////Player Input Messages///////////////////////////////

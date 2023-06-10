@@ -32,24 +32,64 @@ namespace Lemongrass
      * @param increment The increment to round the value to. NOTE that this is an unsigned value
      * @return The value having been rounded
      */
-    public static int RoundToValue(int value, UInt16 increment)
+    public static int RoundToValue(int value, ushort increment)
     {
-      // we will convert back to a negative number after the math is done
-      bool wasNegative = value < 0;
-      value = Mathf.Abs(value);
+      if (increment == 0) return 0;
+      int rounding = value + increment / 2;
+      return rounding - rounding % increment;
+    }
 
-      uint segment = 0;
-      while (value > increment)
-      {
-        segment += increment;
-        value -= increment;
-      }
+    /**
+     * @brief Rounds the given value to the nearest increment of the given increment
+     * @param value The value to be rounded
+     * @param increment The increment to round the value to. NOTE that this is an unsigned value
+     * @return The value having been rounded
+     */
+    public static float RoundToValue(float value, ushort increment)
+    {
+      if (increment == 0) return 0;
+      float rounding = (float)Math.Round(value) + increment / 2;
+      return rounding - rounding % increment;
+    }
 
-      if (value >= (increment / 2)) value = increment;
-      else value = 0;
+    /**
+     * @brief Rounds the given value to the nearest increment of the given increment
+     * @param value The value to be rounded
+     * @param increment The increment to round the value to. NOTE that this is an unsigned value
+     * @return The value having been rounded
+     */
+    public static double RoundToValue(double value, ushort increment)
+    {
+      if (increment == 0) return 0;
+      double rounding = Math.Round(value) + increment / 2;
+      return rounding - rounding % increment;
+    }
 
-      int returnVal = (int)(segment + value);
-      return wasNegative ? -returnVal : returnVal;
+    /**
+     * @brief Rounds the given vector to the nearest increment of the given increment for all components of the vector
+     * @param value The vector to be rounded
+     * @param increment The increment to round the vectors components to. NOTE that this is an unsigned value
+     * @return The vector having had the components rounded
+     */
+    public static Vector3 RoundToValue(Vector3 value, ushort increment)
+    {
+      value.x = RoundToValue(value.x, increment);
+      value.y = RoundToValue(value.y, increment);
+      value.z = RoundToValue(value.z, increment);
+      return value;
+    }
+    /**
+     * @brief Rounds the given vector to the nearest increment of the given increment for all components of the vector
+     * @param value The vector to be rounded
+     * @param increment The increment to round the vectors components to. NOTE that this is an unsigned value
+     * @return The vector having had the components rounded
+     */
+    public static Vector3Int RoundToValue(Vector3Int value, ushort increment)
+    {
+      value.x = RoundToValue(value.x, increment);
+      value.y = RoundToValue(value.y, increment);
+      value.z = RoundToValue(value.z, increment);
+      return value;
     }
   }
 }

@@ -145,6 +145,7 @@ namespace Lemongrass
 
       // create the canvas that will display tooltips
       GameObject canvasObject = new GameObject("TooltipCanvas");
+      GameObject.DontDestroyOnLoad(canvasObject);
       canvasObject.transform.parent = GameInstance.Instance.transform.parent;
 
       tooltipCanvas = canvasObject.AddComponent<Canvas>();

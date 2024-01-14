@@ -145,7 +145,7 @@ namespace Lemongrass
      */
     public bool Damage(float amount, Health instigator)
     { 
-      if (instigator == null) return Damage(new DamageEvent(amount, Team.Unknown, null);
+      if (instigator == null) return Damage(new DamageEvent(amount, Team.Unknown, null));
       else return Damage(new DamageEvent(amount, instigator.originTeam, instigator));
     }
 
@@ -157,7 +157,7 @@ namespace Lemongrass
      */
     public bool Heal(float amount, Health instigator)
     {
-      if (instigator == null) return Heal(new DamageEvent(-amount, Team.Unknown, null);
+      if (instigator == null) return Heal(new DamageEvent(-amount, Team.Unknown, null));
       return Heal(new DamageEvent(-amount, instigator.originTeam, instigator));
     }
 

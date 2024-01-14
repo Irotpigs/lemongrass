@@ -47,6 +47,11 @@ namespace Lemongrass
        */
       public Team OriginatingTeam;
 
+      /**
+       * @brief The health component of the instigator/damager. May be null.
+       */
+      public Health DamageInstigator;
+
       ////////////////////////////////////Functions//////////////////////////////////
       //-public--------------------------------------------------------------------//
 
@@ -54,30 +59,32 @@ namespace Lemongrass
        * @brief Construct a damage event with the relevant details
        * @param amount The amount of points dealt.
        * @param originTeam The OriginatingTeam for this damage event
+       * @param originHealth The health component of the instigator/damager
        */
-      public DamageEvent(float amount, Team originTeam)
+      public DamageEvent(float amount, Team originTeam, Health instigator)
       {
         Amount = amount;
         OriginatingTeam = originTeam;
+        DamageInstigator = instigator;
       }
     }
 
-    public delegate void VoidHealthValue(Health health, float amount);
+    public delegate void VoidHealthDamageEvent(Health health, DamageEvent damageEvent);
 
     ////////////////////////////////////Variables//////////////////////////////////
     //-public--------------------------------------------------------------------//
     /**
      * @brief triggers when the health has been reduced to 0
      */
-    public event VoidHealthValue Event_HealthDepleted;
+    public event VoidHealthDamageEvent Event_HealthDepleted;
     /**
      * @brief triggers when the health is reduced by any amount
      */
-    public event VoidHealthValue Event_DamageTaken;
+    public event VoidHealthDamageEvent Event_DamageTaken;
     /**
      * @brief triggers when the health is increased by any amount
      */
-    public event VoidHealthValue Event_HealthGained;
+    public event VoidHealthDamageEvent Event_HealthGained;
 
     /**
      * @brief Get the characters maximum possible health
@@ -133,17 +140,47 @@ namespace Lemongrass
     /**
      * @brief Deals damage to this health if possible given the inputs.
      * @param amount The amount of damage to deal.
+     * @param instigator The health component of the one dealing the damage
+     * @return True if the damage went through to this health
+     */
+    public bool Damage(float amount, Health instigator)
+    { 
+      if (instigator == null) return Damage(new DamageEvent(amount, Team.Unknown, null);
+      else return Damage(new DamageEvent(amount, instigator.originTeam, instigator));
+    }
+
+    /**
+     * @brief Heals the health if possible given the inputs.
+     * @param amount The amount of health to heal.
+     * @param instigator The health component of the one doing the healing
+     * @return True if the healing went through to this health
+     */
+    public bool Heal(float amount, Health instigator)
+    {
+      if (instigator == null) return Heal(new DamageEvent(-amount, Team.Unknown, null);
+      return Heal(new DamageEvent(-amount, instigator.originTeam, instigator));
+    }
+
+    /**
+     * @brief Deals damage to this health from a source without a Health component
+     * @param amount The amount of damage to deal.
      * @param originTeam The team that is dealing the damage.
      * @return True if the damage went through to this health
      */
     public bool Damage(float amount, Team originTeam)
     { 
-      return Damage(new DamageEvent(amount, originTeam));
+      return Damage(new DamageEvent(amount, originTeam, null));
     }
 
+    /**
+     * @brief Heals the health from a source without a Health component.
+     * @param amount The amount of health to heal.
+     * @param originTeam The team that is healing.
+     * @return True if the healing went through to this health
+     */
     public bool Heal(float amount, Team originTeam)
     {
-      return Heal(new DamageEvent(-amount, originTeam));
+      return Heal(new DamageEvent(-amount, originTeam, null));
     }
 
     //-private-------------------------------------------------------------------//
@@ -158,8 +195,9 @@ namespace Lemongrass
       if (CurrentHP == 0) return false;
       if (IsFriendly(damageEvent.OriginatingTeam)) return false;
 
-      // we still have to update the value through the server
       UpdateHealth(CurrentHP - damageEvent.Amount);
+      Event_DamageTaken?.Invoke(this, damageEvent);
+      if (currentHP <= 0) Event_HealthDepleted?.Invoke(this, amount);
       return true;
     }
 
@@ -169,6 +207,7 @@ namespace Lemongrass
       if (!IsFriendly(healEvent.OriginatingTeam)) return false;
 
       UpdateHealth(CurrentHP + healEvent.Amount);
+      Event_HealthGained?.Invoke(this, healEvent);
       return true;
     }
 
@@ -182,14 +221,6 @@ namespace Lemongrass
     private void ResetHealth()
     {
       currentHP = MaxHP;
-    }
-
-    private void BroadcastHealthChanged(float amount, float newCurrentHP)
-    {
-      if (amount < 0) Event_DamageTaken?.Invoke(this, -amount);
-      else if (amount > 0) Event_HealthGained?.Invoke(this, amount);
-
-      if (newCurrentHP <= 0) Event_HealthDepleted?.Invoke(this, amount);
     }
   }
 }

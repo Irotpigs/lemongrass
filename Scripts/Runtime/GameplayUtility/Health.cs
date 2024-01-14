@@ -146,7 +146,7 @@ namespace Lemongrass
     public bool Damage(float amount, Health instigator)
     { 
       if (instigator == null) return Damage(new DamageEvent(amount, Team.Unknown, null));
-      else return Damage(new DamageEvent(amount, instigator.originTeam, instigator));
+      else return Damage(new DamageEvent(amount, instigator.OriginatingTeam, instigator));
     }
 
     /**
@@ -158,7 +158,7 @@ namespace Lemongrass
     public bool Heal(float amount, Health instigator)
     {
       if (instigator == null) return Heal(new DamageEvent(-amount, Team.Unknown, null));
-      return Heal(new DamageEvent(-amount, instigator.originTeam, instigator));
+      return Heal(new DamageEvent(-amount, instigator.OriginatingTeam, instigator));
     }
 
     /**
@@ -197,7 +197,7 @@ namespace Lemongrass
 
       UpdateHealth(CurrentHP - damageEvent.Amount);
       Event_DamageTaken?.Invoke(this, damageEvent);
-      if (currentHP <= 0) Event_HealthDepleted?.Invoke(this, amount);
+      if (currentHP <= 0) Event_HealthDepleted?.Invoke(this, damageEvent);
       return true;
     }
 
@@ -215,7 +215,6 @@ namespace Lemongrass
     {
       float healthChange = -(currentHP - newCurrentHP);
       if (!invincible) currentHP = Mathf.Max(newCurrentHP, 0);
-      BroadcastHealthChanged(healthChange, newCurrentHP);
     }
 
     private void ResetHealth()

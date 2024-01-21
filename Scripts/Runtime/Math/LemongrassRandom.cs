@@ -15,13 +15,13 @@ namespace Lemongrass
    * @brief Combines a value T with the probability that the value will be chosen
    *        from a collection with other ValueProbabilityPairs.
    */
-   [System.Serializable]
+  [System.Serializable]
   public struct ValueProbabilityPair<T>
   {
     public T Value;
     public float P; // (robability)
   }
-
+  
   /**
    * @brief A collection of utility functions that are used for randomness.
    */
@@ -149,6 +149,22 @@ namespace Lemongrass
     {
       Debug.Assert(array.Length > 0, "Cannot get a random from an empty collection");
       return array[Random.Range(0, array.Length)];
+    }
+    
+    /**
+     * @brief Shuffles the given collection ased on fisher-yates shuffle
+     * @param list The list to shuffle
+     */
+    static public void Shuffle<T>(this IList<T> list)
+    {
+      int n = list.Count;
+      while (n-- > 1)
+      {
+        int k = Random.Range(0, list.Count);
+        T value = list[k];
+        list[k] = list[n];
+        list[n] = value;
+      }
     }
   }
 }
